@@ -10,7 +10,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int totalSeconds = 1500;
+  bool isRunning = false; //타이머 진행여부 확인
+  int totalSeconds = 1500; //총 시간
   late Timer timer; //late vatiable modifier는 이 property를 당장 초기화하지 않아도 된다는것을 뜻함.
   //property를 사용하기전에 초기화 한다고 계약
   void onTick(Timer time) {
@@ -24,6 +25,16 @@ class _HomeScreenState extends State<HomeScreen> {
       const Duration(seconds: 1),
       onTick,
     ); //타이버 함수는 주기(첫번째 파라미터)마다  함수(2번째 파라미터)를 실행
+    setState(() {
+      isRunning = true;
+    });
+  }
+
+  void onPausePressed() {
+    timer.cancel(); //타이머 종료
+    setState(() {
+      isRunning = false;
+    });
   }
 
   @override
@@ -38,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               alignment: Alignment.bottomCenter,
               child: Text(
-                '25:00',
+                '$totalSeconds',
                 style: TextStyle(
                     color: Theme.of(context).cardColor,
                     fontSize: 89,
@@ -52,8 +63,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: IconButton(
                 iconSize: 120,
                 color: Theme.of(context).cardColor,
-                onPressed: onStartPressed,
-                icon: const Icon(Icons.play_circle_outline),
+                onPressed:
+                    isRunning ? onPausePressed : onStartPressed, //3항연산자로 조절
+                icon: Icon(isRunning
+                    ? Icons.pause_circle_outline
+                    : Icons.play_circle_outline),
               ),
             ),
           ),
