@@ -49,6 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void onStopPressed() {
+    timer.cancel(); //타이머 종료
+    setState(() {
+      isRunning = false;
+      totalSeconds = twentyFiveMinutes;
+    });
+  }
+
   String format(int seconds) {
     var duration = Duration(seconds: seconds);
     return duration.toString().split(".").first.substring(2);
@@ -77,14 +85,25 @@ class _HomeScreenState extends State<HomeScreen> {
           Flexible(
             flex: 2, //default = 1 2는 1의 2배
             child: Center(
-              child: IconButton(
-                iconSize: 120,
-                color: Theme.of(context).cardColor,
-                onPressed:
-                    isRunning ? onPausePressed : onStartPressed, //3항연산자로 조절
-                icon: Icon(isRunning
-                    ? Icons.pause_circle_outline
-                    : Icons.play_circle_outline),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    iconSize: 120,
+                    color: Theme.of(context).cardColor,
+                    onPressed:
+                        isRunning ? onPausePressed : onStartPressed, //3항연산자로 조절
+                    icon: Icon(isRunning
+                        ? Icons.pause_circle_outline
+                        : Icons.play_circle_outline),
+                  ),
+                  IconButton(
+                    iconSize: 120,
+                    color: Theme.of(context).cardColor,
+                    onPressed: onStopPressed, //3항연산자로 조절
+                    icon: const Icon(Icons.stop_circle_outlined),
+                  ),
+                ],
               ),
             ),
           ),
